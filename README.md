@@ -2,7 +2,7 @@
 
 A small document editor: write and format documents, import files, and share them with other people.
 
-**Live app:** _TODO: add Vercel URL_
+**Live app:** https://folio-docs-nine.vercel.app (sign in as alice@example.com, bob@example.com or carol@example.com, password `demo1234`)
 
 ## Demo accounts
 

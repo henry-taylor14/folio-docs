@@ -82,6 +82,7 @@ Done and verified:
 - [x] Make a copy (anyone with read access, editor header): caller owns the copy, shares not copied; editors flush pending autosave first
 - [x] Validation and error states (401/403/404/400/413/422/500 JSON errors, inline UI errors)
 - [x] 29 unit tests pass (`npm test`); typecheck and `next build` pass
+- [x] Deployed to https://folio-docs-nine.vercel.app (Vercel + Neon); live curl smoke test of login, listing, 404/403/401 paths passes
 - [x] Manual verification: curl smoke test of every authz path; headless-browser run of login -> create -> format -> reload -> share as viewer -> import .md -> viewer sees read-only (that script is NOT committed — see task 2)
 
 ## Remaining work, in priority order

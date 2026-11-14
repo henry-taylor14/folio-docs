@@ -1,6 +1,6 @@
 # Submission contents
 
-- **Live app:** _TODO URL_
+- **Live app:** https://folio-docs-nine.vercel.app
 - **Demo accounts:** alice@example.com, bob@example.com, carol@example.com; password `demo1234`
 - **Walkthrough video:** see `VIDEO_URL.txt`
 
