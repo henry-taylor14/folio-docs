@@ -60,7 +60,9 @@ export async function loadDocumentForUser(userId: string, docId: string, action:
   return { ...row, role: role! };
 }
 
-export async function listDocumentsForUser(userId: string): Promise<{ owned: DocumentSummary[]; shared: DocumentSummary[] }> {
+export async function listDocumentsForUser(
+  userId: string,
+): Promise<{ owned: DocumentSummary[]; shared: DocumentSummary[] }> {
   const db = getDb();
   const owned = await db
     .select({ id: documents.id, title: documents.title, updatedAt: documents.updatedAt, ownerName: users.name })

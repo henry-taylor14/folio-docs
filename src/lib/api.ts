@@ -32,9 +32,7 @@ export async function parseBody<T extends z.ZodTypeAny>(req: Request, schema: T)
  * Wrap a route handler: resolves the signed-in user (401 otherwise) and
  * converts thrown HttpErrors / unexpected errors into JSON responses.
  */
-export function withUser<Ctx>(
-  handler: (req: Request, ctx: Ctx, user: SessionUser) => Promise<Response>,
-) {
+export function withUser<Ctx>(handler: (req: Request, ctx: Ctx, user: SessionUser) => Promise<Response>) {
   return async (req: Request, ctx: Ctx): Promise<Response> => {
     try {
       const user = await getCurrentUser();

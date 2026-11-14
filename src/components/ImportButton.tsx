@@ -41,24 +41,25 @@ export default function ImportButton() {
 
   return (
     <div>
-      <div className="upload">
-        <label className="btn" aria-disabled={pending}>
-          {pending ? "Importing…" : "Import file"}
-          <input
-            ref={inputRef}
-            className="visually-hidden"
-            type="file"
-            accept={ACCEPT}
-            disabled={pending}
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) void onFile(f);
-            }}
-          />
-        </label>
-        <span className="hint">.txt, .md or .docx, up to 2 MB. Creates a new document.</span>
-      </div>
-      {error && <p className="error" role="alert">{error}</p>}
+      <label className="btn" aria-disabled={pending}>
+        {pending ? "Importing…" : "Import file"}
+        <input
+          ref={inputRef}
+          className="upload-input"
+          type="file"
+          accept={ACCEPT}
+          disabled={pending}
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) void onFile(f);
+          }}
+        />
+      </label>
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

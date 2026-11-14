@@ -1,13 +1,4 @@
-import {
-  index,
-  jsonb,
-  pgEnum,
-  pgTable,
-  text,
-  timestamp,
-  uniqueIndex,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { index, jsonb, pgEnum, pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import type { DocContent } from "@/lib/content";
 
 export const shareRole = pgEnum("share_role", ["viewer", "editor"]);

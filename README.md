@@ -56,6 +56,7 @@ npm run build && npm start
 
 - [Architecture note](docs/ARCHITECTURE.md)
 - [AI workflow note](docs/AI_WORKFLOW.md)
+- [Design system](docs/DESIGN.md), based on Vercel's design.md
 - [What's included](SUBMISSION.md)
 - Screenshots in [docs/screenshots](docs/screenshots)
 

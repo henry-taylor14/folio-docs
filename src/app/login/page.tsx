@@ -7,10 +7,12 @@ export const dynamic = "force-dynamic";
 export default async function LoginPage() {
   if (await getCurrentUser()) redirect("/documents");
   return (
-    <main className="login-wrap">
-      <div className="login-sheet">
-        <h1>Folio</h1>
-        <p>Sign in to write and share documents.</p>
+    <main className="login">
+      <div className="login-inner">
+        <div className="login-head">
+          <h1 className="t-heading-24">Sign in to Folio</h1>
+          <p className="t-secondary">Write, format and share documents.</p>
+        </div>
         <LoginForm />
       </div>
     </main>

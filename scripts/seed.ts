@@ -70,13 +70,22 @@ async function main() {
   const rows = await db
     .select()
     .from(schema.users)
-    .where(inArray(schema.users.email, USERS.map((u) => u.email)));
+    .where(
+      inArray(
+        schema.users.email,
+        USERS.map((u) => u.email),
+      ),
+    );
   const byEmail = Object.fromEntries(rows.map((u) => [u.email, u]));
   const alice = byEmail["alice@example.com"];
   const bob = byEmail["bob@example.com"];
   const carol = byEmail["carol@example.com"];
 
-  const existing = await db.select({ id: schema.documents.id }).from(schema.documents).where(eq(schema.documents.ownerId, alice.id)).limit(1);
+  const existing = await db
+    .select({ id: schema.documents.id })
+    .from(schema.documents)
+    .where(eq(schema.documents.ownerId, alice.id))
+    .limit(1);
   if (existing.length === 0) {
     const [kickoff] = await db
       .insert(schema.documents)

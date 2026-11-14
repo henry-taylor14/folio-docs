@@ -14,6 +14,7 @@ live URL with seeded accounts, for free.
 - Auth: seeded users, bcryptjs, HS256 JWT in an httpOnly cookie (jose)
 - zod at every API boundary; Vitest for tests
 - Target deploy: Vercel + Neon (both free tiers)
+- Styling: plain CSS in `src/app/globals.css`, based on Vercel's design.md (Geist, monochrome, no cards). Read `docs/DESIGN.md` before touching UI.
 
 ## Commands
 ```bash
@@ -25,6 +26,7 @@ npm run dev                   # http://localhost:3000
 npm test                      # vitest (unit + import pipeline)
 npm run typecheck
 npm run build
+npm run format              # prettier
 ```
 `db:push`/`db:seed` load `.env` themselves (Node >= 20.12 `process.loadEnvFile`).
 
@@ -65,6 +67,7 @@ tests/                      access.test.ts, import.test.ts (jsdom; runs real gen
 4. Validate request bodies with zod via `parseBody`; user-facing error strings say what happened and how to fix it.
 5. Route params are Promises in Next 15 (`const { id } = await params`).
 6. Don't add paid services or anything a reviewer must sign up for.
+7. UI follows `docs/DESIGN.md`: existing tokens and type roles only, no badges/pills, no cards or decorative shadows, no em dashes in copy, color only for state with a text cue, check light + dark + 390px. Don't add the Vercel logo or the `vbg-*` stylesheet.
 
 ## Status (verified locally against Postgres 16)
 Done and verified:
@@ -72,6 +75,7 @@ Done and verified:
 - [x] Formatting: bold, italic, underline, strike, H1–H3, bulleted/numbered lists, quote, undo/redo; persists across reload
 - [x] Import .txt/.md/.docx -> new document (2 MB cap, extension + zip-signature checks, empty-file checks)
 - [x] Sharing: owner shares by email as viewer/editor, change role, remove; dashboard splits "My documents" / "Shared with me" with owner + role badge; viewers get a read-only editor
+- [x] UI restyled on Vercel design.md basis (Geist, monochrome, tables for document lists); checked in light/dark at 1280px and 390px
 - [x] Validation and error states (401/403/404/400/413/422/500 JSON errors, inline UI errors)
 - [x] 29 unit tests pass (`npm test`); typecheck and `next build` pass
 - [x] Manual verification: curl smoke test of every authz path; headless-browser run of login -> create -> format -> reload -> share as viewer -> import .md -> viewer sees read-only (that script is NOT committed — see task 2)

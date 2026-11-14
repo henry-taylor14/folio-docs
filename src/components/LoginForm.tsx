@@ -18,15 +18,14 @@ export default function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
-  async function signIn(e?: React.FormEvent, creds?: { email: string; password: string }) {
-    e?.preventDefault();
+  async function signIn(creds: { email: string; password: string }) {
     setPending(true);
     setError(null);
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(creds ?? { email, password }),
+        body: JSON.stringify(creds),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -42,33 +41,75 @@ export default function LoginForm() {
 
   return (
     <>
-      <form onSubmit={signIn} noValidate>
+      <form
+        className="login-form"
+        noValidate
+        onSubmit={(e) => {
+          e.preventDefault();
+          void signIn({ email, password });
+        }}
+      >
         <div className="field">
           <label htmlFor="email">Email</label>
-          <input id="email" className="input" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input
+            id="email"
+            className="input"
+            type="email"
+            autoComplete="username"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
         <div className="field">
           <label htmlFor="password">Password</label>
-          <input id="password" className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input
+            id="password"
+            className="input"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
-        <button className="btn btn-primary" type="submit" disabled={pending} style={{ width: "100%", justifyContent: "center" }}>
-          {pending ? "Signing in…" : "Sign in"}
-        </button>
-        {error && <p className="error" role="alert">{error}</p>}
+        <div>
+          <button className="btn btn-primary btn-lg btn-block" type="submit" disabled={pending}>
+            {pending ? "Signing in…" : "Sign in"}
+          </button>
+          {error && (
+            <p className="error" role="alert">
+              {error}
+            </p>
+          )}
+        </div>
       </form>
-      <div className="demo-accounts">
-        Demo accounts (password <code>{DEMO_PASSWORD}</code>):
-        <ul>
+
+      <section className="demo" aria-labelledby="demo-h">
+        <div>
+          <h2 id="demo-h" className="t-heading-16">
+            Demo accounts
+          </h2>
+          <p className="t-caption">
+            Each uses the password <code>{DEMO_PASSWORD}</code>.
+          </p>
+        </div>
+        <ul className="demo-list">
           {DEMO_ACCOUNTS.map((a) => (
             <li key={a.email}>
-              <button type="button" disabled={pending} onClick={() => signIn(undefined, { email: a.email, password: DEMO_PASSWORD })}>
-                Sign in as {a.name}
-              </button>{" "}
-              ({a.email})
+              <button
+                type="button"
+                className="btn btn-lg"
+                disabled={pending}
+                onClick={() => signIn({ email: a.email, password: DEMO_PASSWORD })}
+              >
+                <span>Sign in as {a.name}</span>
+                <span className="t-secondary">{a.email}</span>
+              </button>
             </li>
           ))}
         </ul>
-      </div>
+      </section>
     </>
   );
 }

@@ -4,9 +4,11 @@ import SignOutButton from "./SignOutButton";
 export default function AppBar({ userName }: { userName: string }) {
   return (
     <header className="appbar">
-      <Link href="/documents" className="brand">Folio</Link>
+      <Link href="/documents" className="brand">
+        Folio
+      </Link>
       <div className="appbar-user">
-        <span>Signed in as {userName}</span>
+        <span>{userName}</span>
         <SignOutButton />
       </div>
     </header>

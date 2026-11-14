@@ -28,7 +28,11 @@ export default function NewDocumentButton() {
       >
         {pending ? "Creating…" : "New document"}
       </button>
-      {error && <p className="error" role="alert">{error}</p>}
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

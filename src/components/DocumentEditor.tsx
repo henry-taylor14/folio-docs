@@ -18,7 +18,7 @@ const STATUS_TEXT: Record<SaveStatus, string> = {
   saving: "Saving…",
   error: "Couldn't save",
 };
-const ROLE_LABEL = { owner: "Owner", editor: "Can edit", viewer: "Can view" } as const;
+const ACCESS_LABEL = { owner: "Owner", editor: "Can edit", viewer: "Can view" } as const;
 
 type Props = {
   id: string;
@@ -44,7 +44,7 @@ export default function DocumentEditor({ id, initialTitle, initialContent, role,
   });
 
   useEffect(() => {
-    document.title = `${title || "Untitled"} – Folio`;
+    document.title = `${title || "Untitled"} | Folio`;
   }, [title]);
 
   function onTitleChange(value: string) {
@@ -60,10 +60,12 @@ export default function DocumentEditor({ id, initialTitle, initialContent, role,
     <>
       <div className="editor-top">
         <div className="editor-head">
-          <Link href="/documents" className="btn btn-quiet" aria-label="Back to all documents">
-            ← Documents
+          <Link href="/documents" className="btn btn-ghost">
+            Documents
           </Link>
-          <label className="visually-hidden" htmlFor="doc-title">Document title</label>
+          <label className="visually-hidden" htmlFor="doc-title">
+            Document title
+          </label>
           <input
             id="doc-title"
             className="title-input"
@@ -81,30 +83,30 @@ export default function DocumentEditor({ id, initialTitle, initialContent, role,
               {status === "error" && (
                 <>
                   {" "}
-                  <button className="btn btn-quiet" onClick={() => void retry()}>Retry</button>
+                  <button className="btn btn-ghost" onClick={() => void retry()}>
+                    Retry
+                  </button>
                 </>
               )}
             </span>
           )}
           {role === "owner" ? (
-            <button className="btn btn-primary" onClick={() => setShareOpen(true)}>Share</button>
+            <button className="btn btn-primary" onClick={() => setShareOpen(true)}>
+              Share
+            </button>
           ) : (
-            <span className="doc-meta">
-              Owned by {ownerName} <span className="badge">{ROLE_LABEL[role]}</span>
+            <span className="access-note">
+              {ownerName}&apos;s document. {ACCESS_LABEL[role]}.
             </span>
           )}
         </div>
         {canEdit && editor && <Toolbar editor={editor} />}
-        {!canEdit && (
-          <div className="readonly-note">You can view this document. Ask {ownerName} for edit access.</div>
-        )}
+        {!canEdit && <div className="readonly-note">You can view this document. Ask {ownerName} for edit access.</div>}
       </div>
 
-      <div className="sheet-wrap">
-        <article className="sheet">
-          <EditorContent editor={editor} />
-        </article>
-      </div>
+      <main className="doc">
+        <EditorContent editor={editor} />
+      </main>
 
       {role === "owner" && <ShareDialog docId={id} open={shareOpen} onClose={() => setShareOpen(false)} />}
     </>

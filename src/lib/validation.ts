@@ -26,7 +26,10 @@ const nodeSchema: z.ZodType<DocNode> = z.lazy(() =>
 );
 
 export const contentSchema = z
-  .object({ type: z.literal("doc", { errorMap: () => ({ message: "Document content is malformed." }) }), content: z.array(nodeSchema).optional() })
+  .object({
+    type: z.literal("doc", { errorMap: () => ({ message: "Document content is malformed." }) }),
+    content: z.array(nodeSchema).optional(),
+  })
   .strict()
   .refine((v) => JSON.stringify(v).length <= CONTENT_MAX_BYTES, "Document is too large to save.");
 

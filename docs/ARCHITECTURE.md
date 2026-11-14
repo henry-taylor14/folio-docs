@@ -23,6 +23,7 @@ The brief asks for depth in a few areas over breadth. I put the depth into three
 | Postgres + Drizzle + postgres-js | Real relational constraints (FKs, unique share per user) and a free hosted tier (Neon). Drizzle has no binary engine, which keeps serverless deploys simple |
 | Seeded users + signed cookie | The brief allows simulated users; real auth would spend time without demonstrating the sharing logic |
 | zod | One validation layer at every API boundary |
+| Plain CSS on a Geist/design.md basis | A small token set and type roles in one file; no CSS framework to learn or configure. See `docs/DESIGN.md` |
 
 ## Data model
 
