@@ -38,6 +38,16 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Enter your password."),
 });
 
+export const signupSchema = z.object({
+  name: z.string().trim().min(1, "Enter your name.").max(100, "Name must be 100 characters or fewer."),
+  email: z.string().trim().toLowerCase().email("Enter a valid email."),
+  // bcrypt only uses the first 72 bytes, so cap it rather than silently ignore the rest.
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters.")
+    .refine((p) => new TextEncoder().encode(p).length <= 72, "Password must be 72 bytes or fewer."),
+});
+
 export const createDocumentSchema = z.object({
   title: titleSchema.optional(),
   content: contentSchema.optional(),

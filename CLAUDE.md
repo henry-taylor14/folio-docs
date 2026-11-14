@@ -52,6 +52,7 @@ tests/                      access.test.ts, import.test.ts (jsdom; runs real gen
 | Method | Path | Who | Notes |
 |---|---|---|---|
 | POST | /api/auth/login, /api/auth/logout | anyone | same 401 message for bad email or password |
+| POST | /api/auth/signup | anyone | `{name, email, password}` (8 to 72 bytes); 409 if email taken; signs in on success |
 | GET/POST | /api/documents | signed in | GET returns `{owned, deleted, shared}`; shared rows carry `deletedAt` |
 | GET/PATCH/DELETE | /api/documents/:id | read / edit+rename / owner | PATCH `{title?, content?}`; DELETE is a soft delete (sets `deleted_at`) |
 | POST | /api/documents/:id/restore | owner | 409 if not deleted |
@@ -100,7 +101,7 @@ Done and verified:
    - Optimistic concurrency: send `updatedAt` with PATCH, return 409 if stale, show "This document changed elsewhere — reload"
    - Basic login rate limiting
 5. **Do not build** (deliberately out of scope, list them in the video): real-time co-editing, comments, version
-   history, signup/OAuth, link sharing, export, attachments.
+   history, OAuth, password reset, email verification, link sharing, export, attachments.
 
 ## Known limitations (document, don't necessarily fix)
 - Last write wins if two editors save the same doc concurrently.
