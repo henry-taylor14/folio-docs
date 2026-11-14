@@ -29,11 +29,15 @@ The brief asks for depth in a few areas over breadth. I put the depth into three
 
 ```
 users            (id, email unique, name, password_hash)
-documents        (id, title, content jsonb, owner_id -> users, created_at, updated_at)
+documents        (id, title, content jsonb, owner_id -> users, created_at, updated_at, deleted_at)
 document_shares  (id, document_id -> documents, user_id -> users, role viewer|editor, unique(document_id, user_id))
 ```
 
 Ownership is a column, not a share row, so a document always has exactly one owner and can't lose it.
+
+Delete is a soft delete: `deleted_at` is set, the owner sees the document under "Recently deleted" with Restore, and
+collaborators get 410 if they open it. Rows older than 30 days are purged lazily when documents are listed or loaded
+(no cron needed on the free tier).
 
 ## Import
 
@@ -46,6 +50,7 @@ anything is stored.
 ## Testing
 
 - `tests/access.test.ts`: the full role × action matrix, plus edge cases.
+- `tests/validation.test.ts`: signup body validation (email normalization, password length incl. bcrypt's 72-byte limit).
 - `tests/import.test.ts`: the real import pipeline in jsdom — Markdown headings/lists/marks, a generated .docx with a
   heading and bold run, HTML injection in .txt and .md, and size/type rejections.
 - Manually verified every authorization path with curl and the main flow in a headless browser.
@@ -53,7 +58,8 @@ anything is stored.
 ## Trade-offs and what's deprioritized
 
 - **Last write wins.** Two editors saving at once overwrite each other. Acceptable for this scope; see next steps.
-- **No real-time collaboration, comments, version history, signup, link sharing or export.**
+- **No real-time collaboration, comments, version history, OAuth, password reset, email verification, link sharing or export.**
+- **Seeded accounts plus basic signup** (no email verification). Sharing by email reveals whether that email has an account.
 - **Import always creates a new document** rather than merging into an existing one.
 
 ## Next 2–4 hours

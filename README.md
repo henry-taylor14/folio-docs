@@ -22,6 +22,9 @@ To try sharing, sign in as Alice in one browser and as Bob or Carol in a private
 - Formatting: bold, italic, underline, strikethrough, headings (H1–H3), bulleted and numbered lists, quotes, undo/redo.
 - Import a file as a new document. **Supported: .txt, .md, .docx, up to 2 MB.** Headings, lists and bold/italic carry over; images and other unsupported formatting are dropped.
 - Share a document by email as **Can view** or **Can edit**; change or remove access later. The dashboard separates "My documents" from "Shared with me".
+- Delete a document (owner only): it moves to "Recently deleted" and can be restored for 30 days. Collaborators see it marked "Deleted by owner".
+- Make a copy of any document you can read; the copy is yours and isn't shared.
+- Sign up for a new account, or use the seeded demo accounts.
 - Documents and sharing are stored in Postgres and survive refresh.
 
 ## Run locally
@@ -64,5 +67,5 @@ npm run build && npm start
 
 Working end to end: everything listed under Features.
 
-Not built (deliberately): real-time co-editing, comments, version history, signup, link sharing, export.
+Not built (deliberately): real-time co-editing, comments, version history, OAuth, password reset, email verification, link sharing, export, attachments.
 See the architecture note for what I'd build next.

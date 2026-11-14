@@ -82,21 +82,18 @@ Done and verified:
 - [x] Delete (owner only, editor header + confirm): soft delete to a "Recently deleted" dashboard section with Restore; purged after 30 days (`TRASH_DAYS` in access.ts, lazy purge in documents.ts). Collaborators see the row greyed with "Deleted by owner" + tooltip; opening it shows a "Document deleted" page
 - [x] Make a copy (anyone with read access, editor header): caller owns the copy, shares not copied; editors flush pending autosave first
 - [x] Validation and error states (401/403/404/400/413/422/500 JSON errors, inline UI errors)
-- [x] 29 unit tests pass (`npm test`); typecheck and `next build` pass
+- [x] Sign up (`/signup`, POST /api/auth/signup)
+- [x] 35 unit tests pass (`npm test`); typecheck and `next build` pass
 - [x] Deployed to https://folio-docs-nine.vercel.app (Vercel + Neon); live curl smoke test of login, listing, 404/403/401 paths passes
 - [x] Manual verification: curl smoke test of every authz path; headless-browser run of login -> create -> format -> reload -> share as viewer -> import .md -> viewer sees read-only (that script is NOT committed — see task 2)
 
 ## Remaining work, in priority order
-1. **Deploy** (needs the human's Neon + Vercel accounts):
-   create Neon project -> copy pooled connection string -> `DATABASE_URL=... npm run db:setup` from local ->
-   import repo in Vercel -> set `DATABASE_URL` and `SESSION_SECRET` env vars -> deploy -> smoke test with two browsers
-   (alice in one, bob in a private window). Put the URL in README.md and SUBMISSION.md.
+1. ~~Deploy~~ done (see Status).
 2. **Commit an end-to-end test.** Playwright (`@playwright/test`) spec: sign in as Alice -> new doc -> type + bold + list
    -> wait for "All changes saved" -> reload and assert formatting -> share with carol as viewer -> sign in as Carol ->
    doc appears under "Shared with me" and editor is `contenteditable=false`. Needs a test DB; run seed first.
    Add `npm run test:e2e`. Keep `npm test` fast and DB-free.
-3. **Docs**: finish README (live URL), review `docs/ARCHITECTURE.md`, fill `SUBMISSION.md`, put the video link in
-   `VIDEO_URL.txt`. `docs/AI_WORKFLOW.md` must be written by the human from their real experience — draft prompts only.
+3. **Docs**: README, ARCHITECTURE and SUBMISSION are done. Still needed: video link in `VIDEO_URL.txt`. `docs/AI_WORKFLOW.md` must be written by the human from their real experience — draft prompts only.
 4. **Small polish, only if time remains:**
    - Optimistic concurrency: send `updatedAt` with PATCH, return 409 if stale, show "This document changed elsewhere — reload"
    - Basic login rate limiting
