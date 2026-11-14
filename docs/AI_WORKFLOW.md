@@ -27,7 +27,6 @@
 - **Automated tests** (`npm test`, 35 tests, no DB needed): full role × action permission matrix, the real import pipeline in jsdom (Markdown, a generated .docx, HTML injection in .txt/.md, size and type rejections), and signup validation. Typecheck and `next build` run before every commit.
 - **Authorization by curl** against local and live servers: owner/editor/viewer/stranger for read, edit, share, delete, restore and copy. Private docs return 404 so they don't leak existence.
 - **Time-based behavior**: the 30-day purge was checked by backdating a deletion (still there at 29 days, gone at 31).
-- **Not trusting a failing check blindly**: one live smoke test returned 400 on an editor save; it turned out to be the shell stripping quotes from the test's JSON, not an app bug. Retested with validJSON.
-- **Browser checks by me**: [what you actually checked: Alice in one window and Bob/Carol in a private window, editing,
-  sharing, reload keeps formatting, viewer is read-only, light/dark, phone width].
-- **Known gaps**: no committed end-to-end browser test; last write wins on concurrent saves.
+- **Not trusting a failing check blindly**: one live smoke test returned 400 on an editor save; it turned out to be the shell stripping quotes from the test's JSON, not an app bug. Retested with valid JSON.
+- **Browser checks by me**: Alice in one window and Bob/Carol in a private window, editing, sharing, reload keeps formatting, viewer is read-only, light/dark.
+- **Known gaps**: no committed end-to-end browser test; last write wins on concurrent saves; text size varies through headings only (no font-size picker).

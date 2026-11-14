@@ -102,6 +102,7 @@ Done and verified:
 
 ## Known limitations (document, don't necessarily fix)
 - Last write wins if two editors save the same doc concurrently.
+- Text size varies only through heading levels (H1 to H3 plus normal text). No free font-size picker.
 - Purge of deleted docs is lazy (runs on document list/load), not a cron. A collaborator with a doc open when it is deleted only sees "Couldn't save" (410 message is in the tooltip).
 - Sharing by email reveals whether that email has an account (acceptable with seeded users only).
 - Import creates a new document; it doesn't merge into an existing one. Images in .docx are dropped (no image node).

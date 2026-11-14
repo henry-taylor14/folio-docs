@@ -35,6 +35,7 @@ Not included: `node_modules/`, build output, and `.env` (secrets). Run `npm inst
 **Incomplete or deliberately not built:**
 - No committed end-to-end browser test (the main flow was verified manually and with a local headless-browser script)
 - Last write wins if two editors save the same document at the same time
+- Text size varies through heading levels only (H1 to H3); there is no font-size picker
 - Not built: real-time co-editing, comments, version history, OAuth, password reset, email verification, link sharing, export, attachments
 
 **Next 2 to 4 hours:** see "Next 2–4 hours" in `docs/ARCHITECTURE.md`.
