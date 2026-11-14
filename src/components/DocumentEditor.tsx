@@ -10,7 +10,7 @@ import { TRASH_DAYS, type Role } from "@/lib/access";
 import { TITLE_MAX } from "@/lib/validation";
 import ShareDialog from "./ShareDialog";
 import Toolbar from "./Toolbar";
-import { DeleteDocumentButton } from "./TrashButtons";
+import { CopyDocumentButton, DeleteDocumentButton } from "./DocumentActions";
 import { useAutosave, type SaveStatus } from "./useAutosave";
 
 const STATUS_TEXT: Record<SaveStatus, string> = {
@@ -91,6 +91,7 @@ export default function DocumentEditor({ id, initialTitle, initialContent, role,
               )}
             </span>
           )}
+          <CopyDocumentButton docId={id} beforeCopy={canEdit ? retry : undefined} />
           {role === "owner" ? (
             <>
               <DeleteDocumentButton docId={id} title={title} days={TRASH_DAYS} />

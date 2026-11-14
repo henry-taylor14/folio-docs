@@ -81,3 +81,21 @@ export function RestoreButton({ docId }: { docId: string }) {
     />
   );
 }
+
+/** Copy a readable document into a new one owned by the current user. `beforeCopy` lets the editor flush unsaved edits first. */
+export function CopyDocumentButton({ docId, beforeCopy }: { docId: string; beforeCopy?: () => Promise<void> }) {
+  const router = useRouter();
+  return (
+    <ActionButton
+      label="Make a copy"
+      pendingLabel="Copying…"
+      className="btn btn-ghost"
+      run={async () => {
+        await beforeCopy?.();
+        const { id } = await api<{ id: string }>(`/api/documents/${docId}/copy`, { method: "POST" });
+        router.push(`/documents/${id}`);
+        return true;
+      }}
+    />
+  );
+}

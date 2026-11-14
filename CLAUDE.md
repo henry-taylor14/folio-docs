@@ -55,6 +55,7 @@ tests/                      access.test.ts, import.test.ts (jsdom; runs real gen
 | GET/POST | /api/documents | signed in | GET returns `{owned, deleted, shared}`; shared rows carry `deletedAt` |
 | GET/PATCH/DELETE | /api/documents/:id | read / edit+rename / owner | PATCH `{title?, content?}`; DELETE is a soft delete (sets `deleted_at`) |
 | POST | /api/documents/:id/restore | owner | 409 if not deleted |
+| POST | /api/documents/:id/copy | read | new doc "Copy of <title>" owned by caller, no shares; returns `{id}` |
 | GET/POST | /api/documents/:id/shares | read / owner | POST upserts `{email, role}` |
 | DELETE | /api/documents/:id/shares/:userId | owner | |
 | POST | /api/import | signed in | multipart `file`; returns `{title, html}` |
@@ -78,6 +79,7 @@ Done and verified:
 - [x] Sharing: owner shares by email as viewer/editor, change role, remove; dashboard splits "My documents" / "Shared with me" with owner + role badge; viewers get a read-only editor
 - [x] UI restyled on Vercel design.md basis (Geist, monochrome, tables for document lists); checked in light/dark at 1280px and 390px
 - [x] Delete (owner only, editor header + confirm): soft delete to a "Recently deleted" dashboard section with Restore; purged after 30 days (`TRASH_DAYS` in access.ts, lazy purge in documents.ts). Collaborators see the row greyed with "Deleted by owner" + tooltip; opening it shows a "Document deleted" page
+- [x] Make a copy (anyone with read access, editor header): caller owns the copy, shares not copied; editors flush pending autosave first
 - [x] Validation and error states (401/403/404/400/413/422/500 JSON errors, inline UI errors)
 - [x] 29 unit tests pass (`npm test`); typecheck and `next build` pass
 - [x] Manual verification: curl smoke test of every authz path; headless-browser run of login -> create -> format -> reload -> share as viewer -> import .md -> viewer sees read-only (that script is NOT committed — see task 2)

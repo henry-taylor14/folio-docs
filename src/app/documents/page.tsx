@@ -3,7 +3,7 @@ import AppBar from "@/components/AppBar";
 import ImportButton from "@/components/ImportButton";
 import LocalTime from "@/components/LocalTime";
 import NewDocumentButton from "@/components/NewDocumentButton";
-import { RestoreButton } from "@/components/TrashButtons";
+import { RestoreButton } from "@/components/DocumentActions";
 import { TRASH_DAYS } from "@/lib/access";
 import { listDocumentsForUser } from "@/lib/documents";
 import { requireUser } from "@/lib/session";
