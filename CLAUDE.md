@@ -52,15 +52,16 @@ tests/                      access.test.ts, import.test.ts (jsdom; runs real gen
 | Method | Path | Who | Notes |
 |---|---|---|---|
 | POST | /api/auth/login, /api/auth/logout | anyone | same 401 message for bad email or password |
-| GET/POST | /api/documents | signed in | GET returns `{owned, shared}` |
-| GET/PATCH/DELETE | /api/documents/:id | read / edit+rename / owner | PATCH `{title?, content?}` |
+| GET/POST | /api/documents | signed in | GET returns `{owned, deleted, shared}`; shared rows carry `deletedAt` |
+| GET/PATCH/DELETE | /api/documents/:id | read / edit+rename / owner | PATCH `{title?, content?}`; DELETE is a soft delete (sets `deleted_at`) |
+| POST | /api/documents/:id/restore | owner | 409 if not deleted |
 | GET/POST | /api/documents/:id/shares | read / owner | POST upserts `{email, role}` |
 | DELETE | /api/documents/:id/shares/:userId | owner | |
 | POST | /api/import | signed in | multipart `file`; returns `{title, html}` |
 
 ## Invariants — keep these true
 1. **Every document access goes through `loadDocumentForUser(..., action)`.** Never query `documents` by id in a route without it.
-2. **No access => 404, readable but not permitted => 403.** Don't leak existence of private docs.
+2. **No access => 404, readable but not permitted => 403, readable but deleted => 410** (except owner `restore`). Don't leak existence of private docs.
 3. **Only schema-valid TipTap JSON is stored.** Import returns HTML; the browser parses it with
    `generateJSON(html, editorExtensions)` which drops unsupported markup (this is the sanitization step).
    If you add an extension, add it to `editor-extensions.ts` only.
@@ -76,6 +77,7 @@ Done and verified:
 - [x] Import .txt/.md/.docx -> new document (2 MB cap, extension + zip-signature checks, empty-file checks)
 - [x] Sharing: owner shares by email as viewer/editor, change role, remove; dashboard splits "My documents" / "Shared with me" with owner + role badge; viewers get a read-only editor
 - [x] UI restyled on Vercel design.md basis (Geist, monochrome, tables for document lists); checked in light/dark at 1280px and 390px
+- [x] Delete (owner only, editor header + confirm): soft delete to a "Recently deleted" dashboard section with Restore; purged after 30 days (`TRASH_DAYS` in access.ts, lazy purge in documents.ts). Collaborators see the row greyed with "Deleted by owner" + tooltip; opening it shows a "Document deleted" page
 - [x] Validation and error states (401/403/404/400/413/422/500 JSON errors, inline UI errors)
 - [x] 29 unit tests pass (`npm test`); typecheck and `next build` pass
 - [x] Manual verification: curl smoke test of every authz path; headless-browser run of login -> create -> format -> reload -> share as viewer -> import .md -> viewer sees read-only (that script is NOT committed — see task 2)
@@ -92,7 +94,6 @@ Done and verified:
 3. **Docs**: finish README (live URL), review `docs/ARCHITECTURE.md`, fill `SUBMISSION.md`, put the video link in
    `VIDEO_URL.txt`. `docs/AI_WORKFLOW.md` must be written by the human from their real experience — draft prompts only.
 4. **Small polish, only if time remains:**
-   - Delete a document from the UI (API exists; add a confirm in the editor header for owners)
    - Optimistic concurrency: send `updatedAt` with PATCH, return 409 if stale, show "This document changed elsewhere — reload"
    - Basic login rate limiting
 5. **Do not build** (deliberately out of scope, list them in the video): real-time co-editing, comments, version
@@ -100,6 +101,7 @@ Done and verified:
 
 ## Known limitations (document, don't necessarily fix)
 - Last write wins if two editors save the same doc concurrently.
+- Purge of deleted docs is lazy (runs on document list/load), not a cron. A collaborator with a doc open when it is deleted only sees "Couldn't save" (410 message is in the tooltip).
 - Sharing by email reveals whether that email has an account (acceptable with seeded users only).
 - Import creates a new document; it doesn't merge into an existing one. Images in .docx are dropped (no image node).
 - No ESLint config yet; `npm run typecheck` is the static check.

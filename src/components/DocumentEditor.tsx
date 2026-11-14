@@ -6,10 +6,11 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import Placeholder from "@tiptap/extension-placeholder";
 import { editorExtensions } from "@/lib/editor-extensions";
 import type { DocContent } from "@/lib/content";
-import type { Role } from "@/lib/access";
+import { TRASH_DAYS, type Role } from "@/lib/access";
 import { TITLE_MAX } from "@/lib/validation";
 import ShareDialog from "./ShareDialog";
 import Toolbar from "./Toolbar";
+import { DeleteDocumentButton } from "./TrashButtons";
 import { useAutosave, type SaveStatus } from "./useAutosave";
 
 const STATUS_TEXT: Record<SaveStatus, string> = {
@@ -91,9 +92,12 @@ export default function DocumentEditor({ id, initialTitle, initialContent, role,
             </span>
           )}
           {role === "owner" ? (
-            <button className="btn btn-primary" onClick={() => setShareOpen(true)}>
-              Share
-            </button>
+            <>
+              <DeleteDocumentButton docId={id} title={title} days={TRASH_DAYS} />
+              <button className="btn btn-primary" onClick={() => setShareOpen(true)}>
+                Share
+              </button>
+            </>
           ) : (
             <span className="access-note">
               {ownerName}&apos;s document. {ACCESS_LABEL[role]}.

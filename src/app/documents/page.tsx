@@ -3,6 +3,8 @@ import AppBar from "@/components/AppBar";
 import ImportButton from "@/components/ImportButton";
 import LocalTime from "@/components/LocalTime";
 import NewDocumentButton from "@/components/NewDocumentButton";
+import { RestoreButton } from "@/components/TrashButtons";
+import { TRASH_DAYS } from "@/lib/access";
 import { listDocumentsForUser } from "@/lib/documents";
 import { requireUser } from "@/lib/session";
 import { SUPPORTED_LABEL } from "@/lib/import";
@@ -13,7 +15,7 @@ const ACCESS_LABEL = { owner: "Owner", editor: "Can edit", viewer: "Can view" } 
 
 export default async function DocumentsPage() {
   const user = await requireUser();
-  const { owned, shared } = await listDocumentsForUser(user.id);
+  const { owned, deleted, shared } = await listDocumentsForUser(user.id);
 
   return (
     <div className="page">
@@ -103,14 +105,71 @@ export default async function DocumentsPage() {
                   </tr>
                 ) : (
                   shared.map((d) => (
-                    <tr key={d.id}>
+                    <tr
+                      key={d.id}
+                      className={d.deletedAt ? "row-deleted" : undefined}
+                      title={
+                        d.deletedAt ? `${d.ownerName} deleted the original. It can no longer be opened.` : undefined
+                      }
+                    >
                       <td className="col-title">
-                        <Link href={`/documents/${d.id}`}>{d.title}</Link>
+                        {d.deletedAt ? d.title : <Link href={`/documents/${d.id}`}>{d.title}</Link>}
                       </td>
                       <td className="col-fit">{d.ownerName}</td>
-                      <td className="col-fit">{ACCESS_LABEL[d.role]}</td>
+                      <td className="col-fit">{d.deletedAt ? "Deleted by owner" : ACCESS_LABEL[d.role]}</td>
                       <td className="col-fit col-hide-sm numeric">
                         <LocalTime iso={d.updatedAt.toISOString()} />
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="dash-section" aria-labelledby="deleted-h">
+          <div className="dash-intro">
+            <h2 id="deleted-h" className="t-heading-20">
+              Recently deleted
+            </h2>
+            <p className="t-secondary">
+              Deleted documents stay here for {TRASH_DAYS} days, then are removed for good. People you shared them with
+              can no longer open them.
+            </p>
+          </div>
+          <div className="table-wrap">
+            <table className="table">
+              <caption className="visually-hidden">Documents you deleted</caption>
+              <thead>
+                <tr>
+                  <th scope="col" className="col-title">
+                    Title
+                  </th>
+                  <th scope="col" className="col-fit">
+                    Deleted
+                  </th>
+                  <th scope="col" className="col-fit">
+                    <span className="visually-hidden">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {deleted.length === 0 ? (
+                  <tr>
+                    <td colSpan={3} className="empty">
+                      Nothing deleted in the last {TRASH_DAYS} days.
+                    </td>
+                  </tr>
+                ) : (
+                  deleted.map((d) => (
+                    <tr key={d.id}>
+                      <td className="col-title">{d.title}</td>
+                      <td className="col-fit numeric">
+                        <LocalTime iso={d.deletedAt!.toISOString()} />
+                      </td>
+                      <td className="col-fit">
+                        <RestoreButton docId={d.id} />
                       </td>
                     </tr>
                   ))

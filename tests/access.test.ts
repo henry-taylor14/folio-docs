@@ -25,9 +25,9 @@ describe("resolveRole", () => {
 
 describe("can", () => {
   const matrix: Record<Role, Record<Action, boolean>> = {
-    owner: { read: true, edit: true, rename: true, share: true, delete: true },
-    editor: { read: true, edit: true, rename: true, share: false, delete: false },
-    viewer: { read: true, edit: false, rename: false, share: false, delete: false },
+    owner: { read: true, edit: true, rename: true, share: true, delete: true, restore: true },
+    editor: { read: true, edit: true, rename: true, share: false, delete: false, restore: false },
+    viewer: { read: true, edit: false, rename: false, share: false, delete: false, restore: false },
   };
 
   for (const [role, actions] of Object.entries(matrix) as [Role, Record<Action, boolean>][]) {
@@ -39,7 +39,7 @@ describe("can", () => {
   }
 
   it("denies everything when there is no role", () => {
-    for (const action of ["read", "edit", "rename", "share", "delete"] as Action[]) {
+    for (const action of ["read", "edit", "rename", "share", "delete", "restore"] as Action[]) {
       expect(can(null, action)).toBe(false);
     }
   });

@@ -30,6 +30,7 @@ export const PATCH = withUser<Ctx>(async (req, { params }, user) => {
 export const DELETE = withUser<Ctx>(async (_req, { params }, user) => {
   const { id } = await params;
   await loadDocumentForUser(user.id, id, "delete");
-  await getDb().delete(schema.documents).where(eq(schema.documents.id, id));
+  // Soft delete: moves to the owner's Recently deleted list; purged after TRASH_DAYS.
+  await getDb().update(schema.documents).set({ deletedAt: new Date() }).where(eq(schema.documents.id, id));
   return new NextResponse(null, { status: 204 });
 });

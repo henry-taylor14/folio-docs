@@ -3,11 +3,14 @@
  * resolveRole + can. Keep this file free of DB/framework imports so it is
  * trivially unit-testable.
  */
+/** Days a deleted document stays in Recently deleted before it is purged. */
+export const TRASH_DAYS = 30;
+
 export type Role = "owner" | "editor" | "viewer";
-export type Action = "read" | "edit" | "rename" | "share" | "delete";
+export type Action = "read" | "edit" | "rename" | "share" | "delete" | "restore";
 
 const PERMISSIONS: Record<Role, ReadonlySet<Action>> = {
-  owner: new Set(["read", "edit", "rename", "share", "delete"]),
+  owner: new Set(["read", "edit", "rename", "share", "delete", "restore"]),
   editor: new Set(["read", "edit", "rename"]),
   viewer: new Set(["read"]),
 };

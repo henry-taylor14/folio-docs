@@ -23,8 +23,10 @@ export const documents = pgTable(
       .references(() => users.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    // Soft delete: set when the owner deletes; row is purged 30 days later.
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
-  (t) => [index("documents_owner_idx").on(t.ownerId)],
+  (t) => [index("documents_owner_idx").on(t.ownerId), index("documents_deleted_at_idx").on(t.deletedAt)],
 );
 
 export const documentShares = pgTable(

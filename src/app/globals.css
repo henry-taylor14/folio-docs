@@ -420,6 +420,23 @@ code {
 .table .empty {
   color: var(--text-2);
 }
+/* Shared docs the owner deleted: greyed, not a link, with a text cue in the Access column. */
+.table .row-deleted td {
+  color: var(--text-2);
+}
+.table tbody tr.row-deleted:hover td {
+  background: transparent;
+}
+.table .row-deleted .col-title {
+  cursor: help;
+}
+
+.trash-action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+}
 .table caption {
   text-align: left;
 }

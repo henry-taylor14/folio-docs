@@ -7,7 +7,7 @@ The brief asks for depth in a few areas over breadth. I put the depth into three
 1. **Formatting that round-trips exactly.** Content is stored as TipTap (ProseMirror) JSON, not HTML. What you save is
    exactly what reopens, and the stored format can only contain node types the editor knows.
 2. **One permission model, enforced on the server.** `src/lib/access.ts` maps roles to actions
-   (owner: read/edit/rename/share/delete; editor: read/edit/rename; viewer: read). Every route loads documents through
+   (owner: read/edit/rename/share/delete/restore; editor: read/edit/rename; viewer: read). Every route loads documents through
    `loadDocumentForUser(userId, docId, action)`, so there's no route that can forget a check. Users without access get
    404 rather than 403, so private documents don't reveal that they exist.
 3. **A save flow you can trust.** Autosave is debounced and serialized: edits made during a save are queued and sent
